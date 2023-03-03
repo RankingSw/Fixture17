@@ -4,6 +4,15 @@ using System.Text;
 
 namespace Fixture17
 {
+    /// <summary>
+    /// Holds the list of fixtures for a single Matchup
+    /// </summary>
+    /// <param name="Count">
+    /// The number of times this Matchup has been scheduled in the complete fixture
+    /// </param>
+    /// <param name="Fixtured">
+    /// The list of FixturedMatch where this Matchup currently appears
+    /// </param>
     public class FixturedMatchupList
     {
         public Matchup Matchup { get; private set; }
@@ -40,6 +49,12 @@ namespace Fixture17
         }
     }
 
+    /// <summary>
+    /// Encapsulates a single fixtured match, using Matchup in FixturedRound Round
+    /// </summary>
+    /// <param name="IsHome">
+    /// Whether the first team in the matchup (with the lower index) is at home
+    /// </param>
     public class FixturedMatch
     {
         public FixturedRound Round { get; private set; }

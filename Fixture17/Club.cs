@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Fixture17
 {
+    ///<summary>
+    ///AFL clubs in 2020
+    ///</summary>
     public class Club
     {
         public static List<Club> Clubs { get; private set; }

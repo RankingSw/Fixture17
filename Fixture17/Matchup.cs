@@ -4,6 +4,14 @@ using System.Text;
 
 namespace Fixture17
 {
+    
+    /// <summary>
+    /// Class encapsulating possible Matchups between each pair of clubs, and a static List to hold them all in order
+    /// Enforces i < j
+    /// </summary>
+    /// <param name="Key">
+    /// Flattening of club index pair into a single index
+    /// </param>
     public class Matchup
     {
         public static List<Matchup> AllMatchups { get; private set; }

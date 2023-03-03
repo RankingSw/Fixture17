@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Fixture17
 {
+    /// <summary>
+    /// Encapsulates a Round of the fixture
+    /// </summary>
+    /// <param name="Saturday">
+    /// Specifically for Rounds in the 2020 season, using Excel date numbering
+    /// </param>
     public class FixturedRound
     {
         public List<FixturedMatch> Matches { get; private set; }
@@ -17,7 +23,11 @@ namespace Fixture17
             Matches = new List<FixturedMatch>();
         }
 
-        // Fisher-Yates shuffle
+        /// <summary>
+        /// Fisher-Yates shuffle
+        /// In the commented-out code, see examples of Locked matches that must happen in that Round
+        /// The teams remaining in 'array' can be randomised
+        /// </summary>
         public static FixturedRound RandomRound(int roundNumber)
         {
             FixturedRound r = new FixturedRound(roundNumber);
@@ -98,6 +108,7 @@ namespace Fixture17
                 array[i] = temp;
             }
 
+            // Enforce the Matchup order with lower index first
             for (int j = 0; j < n; j += 2)
             {
                 if (array[j] > array[j + 1])

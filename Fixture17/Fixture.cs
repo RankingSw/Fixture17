@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Fixture17
 {
+    /// <summary>
+    /// Most of the algorithmic logic sits in this class
+    /// Final state of the Fixture class contains 13 complete rounds from 2020
+    /// </summary>
     public class Fixture
     {
         public static FixturedRound Round1 { get; private set; }
@@ -115,6 +119,8 @@ namespace Fixture17
         public Fixture(int numRounds)
         {
             Rounds = new List<FixturedRound>(numRounds);
+
+            // Already scheduled or played: all games locked
             Rounds.Add(Round1);
             Rounds.Add(Round2);
             Rounds.Add(Round3);
@@ -130,14 +136,10 @@ namespace Fixture17
             Rounds.Add(Round11);
             Rounds.Add(Round12);
             Rounds.Add(Round13);
-            //foreach (FixturedRound r in Rounds)
-            //{
-            //    foreach (Matchup m in r.Matches)
-            //        isFixtured[m.Key] = true;
-            //}
+
+            // Random starters for remaining Rounds
             for (int i = 14; i <= numRounds; i++)
                 Rounds.Add(FixturedRound.RandomRound(i));
-            //Rounds.Add(new FixturedRound(i));
 
             fixtured = new List<FixturedMatchupList>(153);
             for (int i = 0; i < 153; i++)
@@ -156,6 +158,11 @@ namespace Fixture17
             return fixtured[key].Count;
         }
 
+        /// <summary>
+        /// Stage One
+        /// The core of the main algorithm: try to improve the pairings
+        /// Keep running this until NumberUnscheduled is zero
+        /// </summary>
         public void ImproveRandom()
         {
             // Find a round where a swap would make sense
@@ -222,16 +229,20 @@ namespace Fixture17
 
         }
 
-        // Remove return matchups but group the byes together
-        // Would love to have three in Rounds 10-11, five in the rest (before reshuffle)
+        /// <summary>
+        /// Stage Two
+        /// If we have deliberately scheduled too many Rounds, take out the excess games
+        /// RoundNumber is abused as an ordering mechanism
+        /// (comments below from early in the season)
+        /// Remove return matchups but group the byes together
+        /// Would love to have three in Rounds 10-11, five in the rest (before reshuffle)
+        /// </summary>
         public void RemoveExtras()
         {
             List<FixturedMatchupList> duplicateList = fixtured.Where(l => l.Count > 1).ToList();
             foreach (FixturedMatchupList l in duplicateList)
             {
                 FixturedMatch dupe = l.Fixtured.Last();
-                //if (dupe.Round.RoundNumber == Rounds.Count && !l.Fixtured.First().IsLocked)
-                //    dupe = l.Fixtured.First();
                 dupe.Round.Matches.Remove(dupe);
                 fixtured[dupe.Matchup.Key].Remove(dupe);
             }
@@ -258,6 +269,11 @@ namespace Fixture17
             Rounds.ForEach(r => r.RoundNumber = roundNumber++);
         }
 
+        /// <summary>
+        /// Stage Three
+        /// Give each team the same number of home & away fixtures (or within one, for an odd number of matches)
+        /// Features sleight-of-hand with the clubIndex. Yikes!
+        /// </summary> 
         public void BalanceHomeAway()
         {
             // Find an unbalanced team and remove some imbalance. Repeat until there is enough cardboard under all the legs
